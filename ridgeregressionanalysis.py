@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy
 from numpy import arange
 from pandas import read_csv
 from sklearn.linear_model import RidgeCV
@@ -20,7 +21,6 @@ exportDict = dict()
 
 for key in exportDict0.keys():
     exportDict[int(key)] = exportDict0.get(key)
-
 
 # Standardizing time data for oil prices & calculates average cost of oil per year
 oilRaw = oilRaw.dropna()
@@ -54,18 +54,12 @@ writer.save()
 data = combinedData.values
 x, y = data[:, :-1], data[:, -1]
 cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+
 # Define model
 model = RidgeCV(alphas=arange(0.01, 1, 10.0), cv=cv, scoring='neg_mean_absolute_error')
-# # Fit model
+# Fit model
 model.fit(x, y)
-# Summarize chosen configuration
-# print('alpha: %f' % model.alpha_)
-coefVector = model.coef_
 
-
-
-# print(x)
-# print(y)
-
-# print(combinedData.to_string())
-
+# Predict
+inputData = [2023,85.35,130]
+print(model.predict([inputData]))
